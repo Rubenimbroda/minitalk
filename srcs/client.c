@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 21:33:48 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 01:18:45 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/11/28 14:38:42 by rnuno-im         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,14 @@
 
 void	args_check(int argc, char **argv)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	if (argc != 3)
 		ft_printf("Invalid number of arguments");
-
 	while (argv[1][i])
 		if (!ft_isdigit(argv[1][i++]))
 			ft_printf("Invalid PID");
-
 	if (*argv[2] == 0)
 		ft_printf("Invalid message (empty)");
 }
@@ -38,7 +37,7 @@ void	send_msg(pid_t sv_pid, char *msg)
 		bits = 8;
 		while (bits--)
 		{
-			if (c & 0x80)
+			if (c & 0b10000000)
 				kill(sv_pid, SIGUSR1);
 			else
 				kill(sv_pid, SIGUSR2);
@@ -49,7 +48,7 @@ void	send_msg(pid_t sv_pid, char *msg)
 	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pid_t	sv_pid;
 

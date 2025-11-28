@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 00:21:05 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 01:33:42 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:11:11 by rnuno-im         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,20 @@
 
 void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
 {
-	static int				bit_itr;
+	static int				bit_itr = 7;
 	static unsigned char	c;
 
-    bit_itr = -1;
 	(void)ucontent;
-	if (bit_itr < 0)
-		bit_itr = 7;
 	if (signum == SIGUSR1)
 		c |= (1 << bit_itr);
 	bit_itr--;
-	if (bit_itr < 0 && c)
+	if (bit_itr < 0)
 	{
 		ft_putchar_fd(c, STDOUT_FILENO);
 		c = 0;
-		if (kill(info->si_pid, SIGUSR2) == -1)
-			ft_printf("Server failed to send SIGUSR2");
-		return ;
+		bit_itr = 7;
+		kill(info->si_pid, SIGUSR2);
 	}
-	if (kill(info->si_pid, SIGUSR1) == -1)
-		ft_printf("Failed to send SIGUSR1");
 }
 
 void	config_signals(void)
@@ -54,7 +48,8 @@ int	main(void)
 
 	pid = getpid();
 	ft_printf("SERVER PID = %d\n\n", pid);
+	config_signals();
 	while (1)
-		config_signals();
+		pause();
 	return (EXIT_SUCCESS);
 }

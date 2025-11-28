@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 21:33:51 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 01:18:31 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/11/28 16:17:36 by rnuno-im         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@ void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
 
 	(void)info;
 	(void)ucontent;
-
 	if (signum == SIGUSR1)
 		c |= (1 << bit_itr);
-
 	bit_itr--;
-
 	if (bit_itr < 0)
 	{
 		if (c >= 32 && c <= 126)
@@ -36,7 +33,7 @@ void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
 
 void	config_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sa.sa_sigaction = &handle_sigusr;
 	sa.sa_flags = SA_SIGINFO;
@@ -45,10 +42,14 @@ void	config_signals(void)
 	sigaction(SIGUSR2, &sa, NULL);
 }
 
-int main(void)
+int	main(void)
 {
-	ft_printf("SERVER PID = %d\n", getpid());
+	pid_t	pid;
+
+	pid = getpid();
+	ft_printf("SERVER PID = %d\n", pid);
 	config_signals();
 	while (1)
 		pause();
+	return (EXIT_SUCCESS);
 }

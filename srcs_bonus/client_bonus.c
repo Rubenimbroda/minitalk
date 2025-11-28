@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 00:20:35 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 00:50:30 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/11/28 15:58:00 by rnuno-im         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,11 @@ int	main(int argc, char **argv)
 	args_check(argc, argv);
 	sv_pid = ft_atoi(argv[1]);
 	config_signals();
+	ft_printf("Sending message to server PID: %d\n", sv_pid);
 	send_msg(sv_pid, argv[2]);
+	ft_printf("Sending message to server PID: %d\n", sv_pid);
 	while (1)
 		pause();
+	ft_printf("Sending message to server PID: %d\n", sv_pid);
 	return (EXIT_SUCCESS);
 }
