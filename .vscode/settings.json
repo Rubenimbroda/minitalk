@@ -1,0 +1,16 @@
+{
+    "C_Cpp.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc",
+    "C_Cpp.default.includePath": [
+        "/usr/include",
+        "/usr/local/include",
+        "${workspaceFolder}/**"
+    ],
+    "files.associations": {
+        "signal.h": "c",
+        "unistd.h": "c",
+        "sys/types.h": "c",
+        "*.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+}
