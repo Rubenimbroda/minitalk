@@ -6,7 +6,7 @@
 /*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 00:20:35 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/30 19:32:36 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:51:56 by rubenior         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	config_signals(void)
 
 	sa_newsig.sa_handler = &sig_handler;
 	sa_newsig.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa_newsig.sa_mask);
 	if (sigaction(SIGUSR1, &sa_newsig, NULL) == -1)
 		ft_printf("ERROR\nFailed to change SIGUSR1's behavior\n");
 	if (sigaction(SIGUSR2, &sa_newsig, NULL) == -1)
