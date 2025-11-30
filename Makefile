@@ -6,7 +6,7 @@
 #    By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/27 22:35:52 by rubenior          #+#    #+#              #
-#    Updated: 2025/11/27 22:54:33 by rubenior         ###   ########.fr        #
+#    Updated: 2025/11/30 20:12:59 by rubenior         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,20 +43,26 @@ $(SERVER): $(SV_OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(SV_OBJS) $(LIBFT) -o server
 $(CLIENT): $(CLIENT_OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(CLIENT_OBJS) $(LIBFT) -o client
+	@echo "✅ Compilation complete: $(NAME)"
 	
 $(SERVER_BONUS): $(SV_BONUS_OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(SV_BONUS_OBJS) $(LIBFT) -o server_bonus
 $(CLIENT_BONUS): $(CLIENT_BONUS_OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(CLIENT_BONUS_OBJS) $(LIBFT) -o client_bonus
+	@echo "✅ Compilation complete: $(NAME)"
 
 clean:
 	$(MAKE) clean -C ./libft
 	$(RM) $(SV_OBJS) $(CLIENT_OBJS)
-	$(RM) $(SV_BONUS_OBJS) $(CLIENT_BONUS_OBJS) 
+	$(RM) $(SV_BONUS_OBJS) $(CLIENT_BONUS_OBJS)
+	@echo "🧹 Object files cleaned."
+
 fclean: clean
 	$(MAKE) fclean -C ./libft
 	$(RM) $(SERVER) $(CLIENT)
 	$(RM) $(SERVER_BONUS) $(CLIENT_BONUS)
+	@echo "🗑️  All cleaned."
+
 re: fclean all
 
 bonus: $(SERVER_BONUS) $(CLIENT_BONUS)

@@ -3,27 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 00:20:35 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 15:58:00 by rnuno-im         ###   ########.fr       */
+/*   Updated: 2025/11/30 19:32:36 by rubenior         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes_bonus/minitalk_bonus.h"
 
-void	args_check(int argc, char **argv)
+int	args_check(int argc, char **argv)
 {
 	int	i;
 
 	i = 0;
 	if (argc != 3)
-		ft_printf("Invalid number of arguments");
+	{
+		ft_printf("ERROR\nInvalid number of arguments\n");
+		return (1);
+	}
 	while (argv[1][i])
 		if (!ft_isdigit(argv[1][i++]))
-			ft_printf("Invalid PID");
+		{
+			ft_printf("ERROR\nInvalid PID\n");
+			return (1);
+		}
 	if (*argv[2] == 0)
-		ft_printf("Invalid message (empty)");
+	{
+		ft_printf("ERROR\nInvalid message (empty)\n");
+		return (1);
+	}
+	return (0);
 }
 
 void	send_msg(pid_t sv_pid, char *msg)
@@ -61,23 +71,24 @@ void	config_signals(void)
 	sa_newsig.sa_handler = &sig_handler;
 	sa_newsig.sa_flags = SA_SIGINFO;
 	if (sigaction(SIGUSR1, &sa_newsig, NULL) == -1)
-		ft_printf("Failed to change SIGUSR1's behavior");
+		ft_printf("ERROR\nFailed to change SIGUSR1's behavior\n");
 	if (sigaction(SIGUSR2, &sa_newsig, NULL) == -1)
-		ft_printf("Failed to change SIGUSR2's behavior");
+		ft_printf("ERROR\nFailed to change SIGUSR2's behavior\n");
 }
 
 int	main(int argc, char **argv)
 {
 	pid_t		sv_pid;
 
-	args_check(argc, argv);
+	if (args_check(argc, argv) == 1)
+		return (EXIT_FAILURE);
 	sv_pid = ft_atoi(argv[1]);
+	if (sv_pid <= 0 || kill(sv_pid, 0) == -1)
+	{
+    	ft_printf("ERROR\nBad PID\n");
+    	return (EXIT_FAILURE);
+	}
 	config_signals();
-	ft_printf("Sending message to server PID: %d\n", sv_pid);
 	send_msg(sv_pid, argv[2]);
-	ft_printf("Sending message to server PID: %d\n", sv_pid);
-	while (1)
-		pause();
-	ft_printf("Sending message to server PID: %d\n", sv_pid);
 	return (EXIT_SUCCESS);
 }

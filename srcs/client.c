@@ -3,27 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/27 21:33:48 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/28 14:38:42 by rnuno-im         ###   ########.fr       */
+/*   Updated: 2025/11/30 19:42:58 by rubenior         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minitalk.h"
 
-void	args_check(int argc, char **argv)
+int	args_check(int argc, char **argv)
 {
 	int	i;
 
 	i = 0;
 	if (argc != 3)
-		ft_printf("Invalid number of arguments");
+	{
+		ft_printf("ERROR\nInvalid number of arguments\n");
+		return (1);
+	}
 	while (argv[1][i])
 		if (!ft_isdigit(argv[1][i++]))
-			ft_printf("Invalid PID");
+		{
+			ft_printf("ERROR\nInvalid PID\n");
+			return (1);
+		}
 	if (*argv[2] == 0)
-		ft_printf("Invalid message (empty)");
+	{
+		ft_printf("ERROR\nInvalid message (empty)\n");
+		return (1);
+	}
+	return (0);
 }
 
 void	send_msg(pid_t sv_pid, char *msg)
@@ -52,8 +62,14 @@ int	main(int argc, char **argv)
 {
 	pid_t	sv_pid;
 
-	args_check(argc, argv);
+	if (args_check(argc, argv) == 1)
+		return (EXIT_FAILURE);
 	sv_pid = ft_atoi(argv[1]);
+	if (sv_pid <= 0 || kill(sv_pid, 0) == -1)
+	{
+    	ft_printf("ERROR\nBad PID\n");
+    	return (EXIT_FAILURE);
+	}
 	send_msg(sv_pid, argv[2]);
-	return (0);
+	return (EXIT_SUCCESS);
 }
