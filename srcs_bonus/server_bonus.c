@@ -3,54 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rubenior <rubenior@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rnuno-im <rnuno-im@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 00:21:05 by rubenior          #+#    #+#             */
-/*   Updated: 2025/11/30 20:46:55 by rubenior         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:28:45 by rnuno-im         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes_bonus/minitalk_bonus.h"
 
-void	handle_sigusr(int signum, siginfo_t *info, void *ucontent)
+static void	btoa(int signal, siginfo_t *info, void *context)
 {
-	static int				bit_itr = 7;
-	static unsigned char	c;
+	static char	c;
+	static int	num;
 
-	(void)ucontent;
-	if (signum == SIGUSR1)
-		c |= (1 << bit_itr);
-	bit_itr--;
-	if (bit_itr < 0)
-	{
-		ft_putchar_fd(c, STDOUT_FILENO);
+	if (!num)
+		num = 8;
+	if (!c)
 		c = 0;
-		bit_itr = 7;
-		kill(info->si_pid, SIGUSR2);
+	num--;
+	if (signal == SIGUSR1)
+		c += 0 << num;
+	if (signal == SIGUSR2)
+		c += 1 << num;
+	if (num == 0)
+	{
+		write(1, &c, 1);
+		num = 8;
+		c = 0;
 	}
-}
-
-void	config_signals(void)
-{
-	struct sigaction	sa_newsig;
-
-	sa_newsig.sa_sigaction = &handle_sigusr;
-	sa_newsig.sa_flags = SA_SIGINFO;
-	sigemptyset(&sa_newsig.sa_mask);
-	if (sigaction(SIGUSR1, &sa_newsig, NULL) == -1)
-		ft_printf("Failed to change SIGUSR1's behavior");
-	if (sigaction(SIGUSR2, &sa_newsig, NULL) == -1)
-		ft_printf("Failed to change SIGUSR2's behavior");
+	if (context == NULL)
+		write(1, "", 0);
+	kill(info->si_pid, SIGUSR2);
 }
 
 int	main(void)
 {
-	pid_t	pid;
+	struct sigaction	sa;
 
-	pid = getpid();
-	ft_printf("SERVER PID = %d\n\n", pid);
-	config_signals();
+	ft_printf("Server PID = %d\n", getpid());
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = btoa;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
-		pause();
-	return (EXIT_SUCCESS);
+		usleep(50);
+	return (0);
 }
